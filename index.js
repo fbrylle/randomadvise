@@ -23,9 +23,13 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/get-advice", async (req, res) => {
-  res.render("index.ejs", {
-    content: await getAdvise(),
-  });
+  try {
+    res.render("index.ejs", {
+      content: await getAdvise(),
+    });
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
 });
 
 app.listen(port, () => {
