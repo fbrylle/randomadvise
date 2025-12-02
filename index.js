@@ -7,17 +7,24 @@ const API_URL = "https://api.adviceslip.com/advice";
 
 app.use(express.static("public"));
 
-app.get("/", async (req, res) => {
+async function getAdvise() {
   const response = await axios.get(API_URL);
-  res.render("index.ejs", {
-    content: response.data.slip.advice,
-  });
+  return response.data.slip.advice;
+}
+
+app.get("/", async (req, res) => {
+  try {
+    res.render("index.ejs", {
+      content: await getAdvise(),
+    });
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
 });
 
 app.post("/get-advice", async (req, res) => {
-  const response = await axios.get(API_URL);
   res.render("index.ejs", {
-    content: response.data.slip.advice,
+    content: await getAdvise(),
   });
 });
 
